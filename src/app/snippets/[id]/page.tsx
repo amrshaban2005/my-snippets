@@ -1,4 +1,4 @@
-import Link from "next/Link";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import * as actions from "@/actions";
@@ -16,8 +16,6 @@ export default async function SinppetShowPage(props: SnippetShowPageProps) {
   const snippet = await db.snippet.findFirst({
     where: { id: parseInt(id) },
   });
-
-  
 
   if (!snippet) {
     return notFound();
@@ -46,4 +44,13 @@ export default async function SinppetShowPage(props: SnippetShowPageProps) {
       </pre>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const snippets = await db.snippet.findMany();
+  return snippets.map((snippet) => {
+    return {
+      id: snippet.id.toString(),
+    };
+  });
 }
